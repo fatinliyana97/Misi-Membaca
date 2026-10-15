@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Misi Membaca Comel! 🎤✨</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border: 4px solid #fff;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-title {
+            font-family: 'Fredoka One', cursive;
+            color: #ff6b6b;
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px #ffe66d;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .input-group {
+            margin: 20px 0;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 15px;
+            border: 3px solid #4ecdc4;
+            border-radius: 20px;
+            font-size: 1.2rem;
+            font-family: 'Quicksand', sans-serif;
+            outline: none;
+            text-align: center;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .reading-box {
+            background: #fff9e6;
+            border: 3px dashed #ffe66d;
+            border-radius: 20px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+            font-size: 1.3rem;
+            line-height: 1.7;
+            color: #333;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.02);
+            font-weight: 500;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #ff6b6b;
+            color: white;
+            padding: 6px 18px;
+            border-radius: 15px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.2rem;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 5px 0 rgba(0,0,0,0.1);
+            margin: 8px;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:active {
+            transform: translateY(3px);
+            box-shadow: none;
+        }
+
+        .btn-start { background-color: #ff6b6b; }
+        .btn-record { background-color: #ff6b6b; }
+        .btn-stop { background-color: #4ecdc4; }
+        .btn-send { background-color: #25d366; }
+
+        .status-box {
+            margin: 15px 0;
+            font-weight: bold;
+            color: #ff6b6b;
+            font-size: 1.1rem;
+            min-height: 28px;
+        }
+
+        .recording-pulse {
+            width: 15px;
+            height: 15px;
+            background-color: #ff6b6b;
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse 1s infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(255, 107, 107, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 107, 107, 0); }
+        }
+
+        audio {
+            margin-top: 15px;
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        .success-card {
+            background-color: #e8f5e9;
+            border: 3px solid #81c784;
+            border-radius: 20px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-card">
+        <!-- Bahagian 1: Mula Game & Masukkan Nama -->
+        <div id="step-1" class="section active">
+            <h1 class="game-title">🌟 Misi Membaca! 🌟</h1>
+            <p style="font-size: 1.1rem;">Sedia untuk tunjukkan bakat membaca anda?</p>
+            <div class="input-group">
+                <input type="text" id="student-name" placeholder="Tulis Nama Anda Di Sini..." autocomplete="off">
+            </div>
+            <button class="btn btn-start" onclick="startGame()">Mula Misi! 🚀</button>
+        </div>
+
+        <!-- Bahagian 2: Petikan & Rakaman Suara -->
+        <div id="step-2" class="section">
+            <span class="badge" id="display-name">Murid</span>
+            <div class="reading-box">
+                <strong>📖 Petikan Membaca:</strong><br><br>
+                Wei Han duduk di ruang tamu. Dia membaca majalah sains. Dia membaca maklumat yang menarik. Maklumat itu tentang kipas angin tanpa bilah.
+            </div>
+
+            <div class="status-box" id="status-text">Tekan ikon mikrofon untuk mula merekod.</div>
+
+            <div>
+                <button id="btn-record" class="btn btn-record" onclick="toggleRecording()">🎤 Mula Rekod</button>
+            </div>
+
+            <audio id="audio-preview" controls style="display: none;"></audio>
+
+            <div id="send-options" style="display: none; margin-top: 20px;">
+                <button id="btn-send" class="btn btn-send" onclick="sendDirectToDrive()">🚀 Hantar Kepada Cikgu!</button>
+            </div>
+        </div>
+
+        <!-- Bahagian 3: Tahniah / Selesai -->
+        <div id="step-3" class="section">
+            <div class="success-card">
+                <h2 style="color: #2e7d32; font-family: 'Fredoka One', cursive; font-size: 2rem;">🎉 TAHNIAH! 🎉</h2>
+                <p style="font-size: 1.2rem; margin-top: 10px; color: #333;">
+                    Rakaman suara anda telah <strong>berjaya dihantar</strong> terus kepada Cikgu! Syabas! ⭐
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // URL WEB APP GOOGLE APPS SCRIPT CIKGU
+        const SCRIPT_URL_CIKGU = "https://script.google.com/macros/s/AKfycbxg7oP98uR_shu1_S6IDV8bVpvE8EdgfRbWXOYkOBV21yK1uzPNIeAikPDQJVOm2nks-g/exec";
+
+        let studentName = "";
+        let mediaRecorder;
+        let audioChunks = [];
+        let audioBlob;
+        let isRecording = false;
+
+        function startGame() {
+            const input = document.getElementById('student-name');
+            if (input.value.trim() === "") {
+                alert("Sila masukkan nama anda dahulu ya! 😊");
+                return;
+            }
+            studentName = input.value.trim();
+            document.getElementById('display-name').innerText = "⭐ Murid: " + studentName;
+            
+            document.getElementById('step-1').classList.remove('active');
+            document.getElementById('step-2').classList.add('active');
+        }
+
+        async function toggleRecording() {
+            const recordBtn = document.getElementById('btn-record');
+            const statusText = document.getElementById('status-text');
+
+            if (!isRecording) {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioChunks = [];
+
+                    mediaRecorder.ondataavailable = event => {
+                        audioChunks.push(event.data);
+                    };
+
+                    mediaRecorder.onstop = () => {
+                        audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
+                        const audioUrl = URL.createObjectURL(audioBlob);
+                        const audioPreview = document.getElementById('audio-preview');
+                        audioPreview.src = audioUrl;
+                        audioPreview.style.display = 'block';
+                        document.getElementById('send-options').style.display = 'block';
+                    };
+
+                    mediaRecorder.start();
+                    isRecording = true;
+
+                    recordBtn.innerHTML = "⏹️ Henti Rekod";
+                    recordBtn.className = "btn btn-stop";
+                    statusText.innerHTML = '<span class="recording-pulse"></span> Sedang merekod... Baca petikan di atas!';
+                } catch (err) {
+                    alert("Sila benarkan akses mikrofon untuk merakam suara.");
+                }
+            } else {
+                mediaRecorder.stop();
+                isRecording = false;
+
+                recordBtn.innerHTML = "🔄 Rekod Semula";
+                recordBtn.className = "btn btn-record";
+                statusText.innerText = "Selesai! Boleh dengar rakaman atau terus hantar.";
+            }
+        }
+
+        function sendDirectToDrive() {
+            if (!audioBlob) return;
+
+            const sendBtn = document.getElementById('btn-send');
+            const statusText = document.getElementById('status-text');
+
+            sendBtn.disabled = true;
+            sendBtn.innerText = "⏳ Sedang Hantar...";
+            statusText.innerText = "Sila tunggu sekejap, fail sedang dihantar...";
+
+            const reader = new FileReader();
+            reader.readAsDataURL(audioBlob);
+            reader.onloadend = function () {
+                const base64Audio = reader.result.split(',')[1];
+
+                const payload = {
+                    studentName: studentName,
+                    audioData: base64Audio,
+                    mimeType: audioBlob.type
+                };
+
+                fetch(SCRIPT_URL_CIKGU, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                })
+                .then(() => {
+                    document.getElementById('step-2').classList.remove('active');
+                    document.getElementById('step-3').classList.add('active');
+                })
+                .catch(error => {
+                    alert("Ralat semasa menghantar. Sila cuba lagi!");
+                    sendBtn.disabled = false;
+                    sendBtn.innerText = "🚀 Hantar Kepada Cikgu!";
+                });
+            };
+        }
+    </script>
+</body>
+</html>
